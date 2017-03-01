@@ -42,4 +42,4 @@ SOCIAL = (#('linkedin', 'https://www.linkedin.com/in/username'),
 MARKUP = ('md', 'ipynb')
 
 PLUGIN_PATHS = ['./plugins']
-PLUGINS = ['ipynb.markup']
+#PLUGINS = ['ipynb.markup']
