@@ -1,107 +1,1308 @@
-<!doctype html>
-<html lang="en" itemscope itemtype="http://schema.org/Person">
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
 <head>
-  <meta charset="utf-8">
-  <!-- Site Meta Data -->
-  <title> Sven's Portfolio
-(Under Construction) |  </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Sam "Sven" Svenningsen">
-
-  <link rel="shortcut icon" href="">
-
-  <!-- schema.org -->
-  <meta itemprop="name" content="Sven's Portfolio
-(Under Construction)">
-  <meta itemprop="image" content="">
-  <meta itemprop="description" content="">
-
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-  <!-- Style Meta Data -->
-  <link rel="stylesheet" href="https://altock.github.io/theme/css/style.css" type="text/css" />
-  <link rel="stylesheet" href="https://altock.github.io/theme/css/pygments.css" type="text/css" />
-
-  <!-- Feed Meta Data -->
-    <link href="https://altock.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Sven's Portfolio
-(Under Construction) ATOM Feed" />
-
-  <!-- Twitter Feed -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:image" content="">
-
-<meta name="twitter:creator" content="">
-<meta name="twitter:url" content="https://altock.github.io">
-<meta name="twitter:title" content="Sven's Portfolio
-(Under Construction)">
-<meta name="twitter:description" content="">
-
-<!-- Facebook Meta Data -->
-<meta property="og:title" content="Sven's Portfolio
-(Under Construction)" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="" />
+<meta charset="utf-8">
+<meta name="description" content="This is a portfolio site for Samuel " sven svenningsen>
+<meta name="viewport" content="width=device-width">
+<title>Sven's Portfolio | Sven's Portfolio</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="https://altock.github.io/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><style>
+    div.input_prompt {
+      display: none;
+    }
+    </style>
 </head>
-
 <body>
-  <!-- Sidebar -->
-  <aside>
-    <!--<center><a href="https://altock.github.io"><img id="avatar" src=""></a></center>-->
-    <h1>Sven's Portfolio
-(Under Construction)</h1>
-    <br>
+    <section class="social"><ul>
+<li><a href="#" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="https://github.com/altock" title="My Github"><i class="icon-github"></i></a></li>
+
+        </ul></section><section class="page-content"><div class="content" rel="main">
+        <div class="post">
+            <h1 class="title"><a href="posts/missed-medical-appointments-exploration-under-construction/">Missed Medical Appointments Exploration (Under Construction)</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2017-03-06T21:12:17-05:00">2017-03-06 21:12</time>
+</div>
+                <div class="stats">
+                                <a href="posts/missed-medical-appointments-exploration-under-construction/#disqus_thread" data-disqus-identifier="cache/posts/missed-medical-appointments-exploration-under-construction.html">Comments</a>
 
 
-    <nav class="nav">
-      <ul class="list-bare">
-      
-         
-        
-      </ul>
-    </nav>
+                </div>
+            
+            </div>
+            <div class="body">
+                <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
 
-    <p class="social">
-        <a href="https://github.com/altock" target="_blank" ><img src="https://altock.github.io/theme/images/icons/github.png"></a>
-      <a href="https://altock.github.io/feeds/all.atom.xml" rel="alternate">
-        <img src="https://altock.github.io/theme/images/icons/rss.png"></a>
-    </p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">preprocessing</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">,</span> <span class="n">svm</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">BaggingClassifier</span><span class="p">,</span> <span class="n">VotingClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">,</span> <span class="n">ExtraTreesClassifier</span><span class="p">,</span> \
+  <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">AdaBoostRegressor</span><span class="p">,</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span><span class="p">,</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span>  <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">LogisticRegressionCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="k">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
 
-    <h2>Categories</h2>
-    <ul class="navbar">
-      <li><a href="https://altock.github.io/category/posts.html">posts</a></li>
-    </ul> 
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">cycle</span>
+
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="n">DIR_DATA</span> <span class="o">=</span> <span class="s2">"data"</span>
+<span class="n">DIR_PROCESSED</span> <span class="o">=</span> <span class="s2">"processed"</span>
+<span class="n">LABEL</span> <span class="o">=</span> <span class="s2">"Status"</span>
+<span class="n">NON_PREDICTORS</span> <span class="o">=</span> <span class="p">[</span><span class="n">LABEL</span><span class="p">]</span><span class="c1">#, "name","anime_id"]</span>
+<span class="n">CV_FOLDS</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># No-show-Issue-Comma-300k.csv</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DIR_DATA</span> <span class="o">+</span> <span class="s1">'/No-show-Issue-Comma-300k.csv'</span><span class="p">)</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
 
 
-  </aside>
-
-  <!-- Content -->
-  <article>
-<h1 class="title">Hi, I'm Sam "Sven" Svenningsen</h1>
-
-<ol>
-	<h2 class="latest">Latest Posts</h2>
-	<li class="post_list"><p class="post_entry">
-		<h2 class="post_title"><a href="https://altock.github.io/hr-post.html" rel="bookmark" title="Permalink to 99.2% Accuracy on Employee Resignations (Under Construction)">99.2% Accuracy on Employee Resignations (Under Construction)</a></h2>
-		<a href="https://altock.github.io/author/sam-sven-svenningsen.html">@Sam "Sven" Svenningsen</a>
-		<span> in </span>
-		<span class="post_category"><a href="https://altock.github.io/category/posts.html" rel="bookmark" title="Permalink to posts">[ posts ]</a></span>
-		<span class="post_date">Thu 02 March 2017</span>
-	</li>
-</ol>
+<div class="output_area">
+<div class="prompt output_prompt">Out[46]:</div>
 
 
-  </article>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>AppointmentRegistration</th>
+      <th>ApointmentData</th>
+      <th>DayOfTheWeek</th>
+      <th>Status</th>
+      <th>Diabetes</th>
+      <th>Alcoolism</th>
+      <th>HiperTension</th>
+      <th>Handcap</th>
+      <th>Smokes</th>
+      <th>Scholarship</th>
+      <th>Tuberculosis</th>
+      <th>Sms_Reminder</th>
+      <th>AwaitingTime</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>19</td>
+      <td>M</td>
+      <td>2014-12-16T14:46:25Z</td>
+      <td>2015-01-14T00:00:00Z</td>
+      <td>Wednesday</td>
+      <td>Show-Up</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-29</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>24</td>
+      <td>F</td>
+      <td>2015-08-18T07:01:26Z</td>
+      <td>2015-08-19T00:00:00Z</td>
+      <td>Wednesday</td>
+      <td>Show-Up</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>4</td>
+      <td>F</td>
+      <td>2014-02-17T12:53:46Z</td>
+      <td>2014-02-18T00:00:00Z</td>
+      <td>Tuesday</td>
+      <td>Show-Up</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>5</td>
+      <td>M</td>
+      <td>2014-07-23T17:02:11Z</td>
+      <td>2014-08-07T00:00:00Z</td>
+      <td>Thursday</td>
+      <td>Show-Up</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-15</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>38</td>
+      <td>M</td>
+      <td>2015-10-21T15:20:09Z</td>
+      <td>2015-10-27T00:00:00Z</td>
+      <td>Tuesday</td>
+      <td>Show-Up</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-6</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
 
-  <!-- Footer -->
-  <footer>
-    <p>
-      Blog powered by <a href="http://getpelican.com/">Pelican</a>, 
-      which takes great advantage of <a href="http://python.org">Python</a>.
-      Theme <a href="https://github.com/parbhat/pelican-blue">Pelican-Blue</a> by <a href="https://parbhatpuri.com/">@parbhat</a>.
-    </p>
-  </footer>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Percent who left: </span><span class="si">{:.2f}</span><span class="s1">%'</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Status</span> <span class="o">==</span> <span class="s1">'Show-Up'</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Status</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
 
 
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Percent who left: 30.24%
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">getTime</span><span class="p">(</span><span class="n">appointment</span><span class="p">):</span>
+    <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">appointment</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">'Z'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)</span>
+    
+    <span class="n">hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hour</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minute</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">60</span><span class="o">*</span><span class="n">hour</span> <span class="o">+</span> <span class="n">minute</span>
+
+<span class="n">ma</span><span class="p">[</span><span class="s2">"AppointmenTime"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">AppointmentRegistration</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">getTime</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[49]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>Age</th>
+      <th>Diabetes</th>
+      <th>Alcoolism</th>
+      <th>HiperTension</th>
+      <th>Handcap</th>
+      <th>Smokes</th>
+      <th>Scholarship</th>
+      <th>Tuberculosis</th>
+      <th>Sms_Reminder</th>
+      <th>AwaitingTime</th>
+      <th>AppointmenTime</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>count</th>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+    </tr>
+<tr>
+<th>mean</th>
+      <td>37.808017</td>
+      <td>0.077967</td>
+      <td>0.025010</td>
+      <td>0.215890</td>
+      <td>0.020523</td>
+      <td>0.052370</td>
+      <td>0.096897</td>
+      <td>0.000450</td>
+      <td>0.574173</td>
+      <td>-13.841813</td>
+      <td>705.811503</td>
+    </tr>
+<tr>
+<th>std</th>
+      <td>22.809014</td>
+      <td>0.268120</td>
+      <td>0.156156</td>
+      <td>0.411439</td>
+      <td>0.155934</td>
+      <td>0.222772</td>
+      <td>0.295818</td>
+      <td>0.021208</td>
+      <td>0.499826</td>
+      <td>15.687697</td>
+      <td>193.880593</td>
+    </tr>
+<tr>
+<th>min</th>
+      <td>-2.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-398.000000</td>
+      <td>354.000000</td>
+    </tr>
+<tr>
+<th>25%</th>
+      <td>19.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-20.000000</td>
+      <td>537.000000</td>
+    </tr>
+<tr>
+<th>50%</th>
+      <td>38.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>-8.000000</td>
+      <td>667.000000</td>
+    </tr>
+<tr>
+<th>75%</th>
+      <td>56.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>-4.000000</td>
+      <td>872.000000</td>
+    </tr>
+<tr>
+<th>max</th>
+      <td>113.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>4.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>2.000000</td>
+      <td>-1.000000</td>
+      <td>1362.000000</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">Status</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">Gender</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">Gender</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">DayOfTheWeek</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">DayOfTheWeek</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="c1"># hr.Work_accident = hr.Work_accident.astype('category')</span>
+<span class="c1"># hr.promotion_last_5years = hr.promotion_last_5years.astype('category')</span>
+<span class="c1"># hr.left = hr.left.astype('category')</span>
+
+<span class="c1"># Normalizing waiting time to mean 0 and unit variance</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">AwaitingTime</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">AwaitingTime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">wait_time_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span> <span class="c1">#preprocessing.StandardScaler()</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">AwaitingTime</span> <span class="o">=</span> <span class="n">wait_time_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">AwaitingTime</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Feature Scaling Age to be between [0,1]</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">Age</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">Age</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">age_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">Age</span> <span class="o">=</span> <span class="n">age_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Age</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Feature Scaling Age to be between [0,1]</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">AppointmenTime</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">AppointmenTime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">time_scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">AppointmenTime</span> <span class="o">=</span> <span class="n">time_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">AppointmenTime</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[51]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>AppointmentRegistration</th>
+      <th>ApointmentData</th>
+      <th>DayOfTheWeek</th>
+      <th>Status</th>
+      <th>Diabetes</th>
+      <th>Alcoolism</th>
+      <th>HiperTension</th>
+      <th>Handcap</th>
+      <th>Smokes</th>
+      <th>Scholarship</th>
+      <th>Tuberculosis</th>
+      <th>Sms_Reminder</th>
+      <th>AwaitingTime</th>
+      <th>AppointmenTime</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>0.182609</td>
+      <td>1</td>
+      <td>2014-12-16T14:46:25Z</td>
+      <td>2015-01-14T00:00:00Z</td>
+      <td>6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.929471</td>
+      <td>0.527778</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>0.226087</td>
+      <td>0</td>
+      <td>2015-08-18T07:01:26Z</td>
+      <td>2015-08-19T00:00:00Z</td>
+      <td>6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>0.066468</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>0.052174</td>
+      <td>0</td>
+      <td>2014-02-17T12:53:46Z</td>
+      <td>2014-02-18T00:00:00Z</td>
+      <td>5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.000000</td>
+      <td>0.415675</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>0.060870</td>
+      <td>1</td>
+      <td>2014-07-23T17:02:11Z</td>
+      <td>2014-08-07T00:00:00Z</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.964736</td>
+      <td>0.662698</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>0.347826</td>
+      <td>1</td>
+      <td>2015-10-21T15:20:09Z</td>
+      <td>2015-10-27T00:00:00Z</td>
+      <td>5</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.987406</td>
+      <td>0.561508</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [52]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[52]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>DayOfTheWeek</th>
+      <th>Status</th>
+      <th>Diabetes</th>
+      <th>Alcoolism</th>
+      <th>HiperTension</th>
+      <th>Handcap</th>
+      <th>Smokes</th>
+      <th>Scholarship</th>
+      <th>Tuberculosis</th>
+      <th>Sms_Reminder</th>
+      <th>AwaitingTime</th>
+      <th>AppointmenTime</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>count</th>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+      <td>300000.000000</td>
+    </tr>
+<tr>
+<th>mean</th>
+      <td>0.346157</td>
+      <td>0.331650</td>
+      <td>3.326650</td>
+      <td>0.697563</td>
+      <td>0.077967</td>
+      <td>0.025010</td>
+      <td>0.215890</td>
+      <td>0.020523</td>
+      <td>0.052370</td>
+      <td>0.096897</td>
+      <td>0.000450</td>
+      <td>0.574173</td>
+      <td>0.967653</td>
+      <td>0.349019</td>
+    </tr>
+<tr>
+<th>std</th>
+      <td>0.198339</td>
+      <td>0.470807</td>
+      <td>2.283518</td>
+      <td>0.459314</td>
+      <td>0.268120</td>
+      <td>0.156156</td>
+      <td>0.411439</td>
+      <td>0.155934</td>
+      <td>0.222772</td>
+      <td>0.295818</td>
+      <td>0.021208</td>
+      <td>0.499826</td>
+      <td>0.039516</td>
+      <td>0.192342</td>
+    </tr>
+<tr>
+<th>min</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+<tr>
+<th>25%</th>
+      <td>0.182609</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.952141</td>
+      <td>0.181548</td>
+    </tr>
+<tr>
+<th>50%</th>
+      <td>0.347826</td>
+      <td>0.000000</td>
+      <td>4.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.982368</td>
+      <td>0.310516</td>
+    </tr>
+<tr>
+<th>75%</th>
+      <td>0.504348</td>
+      <td>1.000000</td>
+      <td>5.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.992443</td>
+      <td>0.513889</td>
+    </tr>
+<tr>
+<th>max</th>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>6.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>4.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>2.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="more"><a href="posts/missed-medical-appointments-exploration-under-construction/">Read more…</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+        <div class="post">
+            <h1 class="title"><a href="posts/992-accuracy-on-employee-resignations-under-construction/">99.2% Accuracy on Employee Resignations (Under Construction)</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2017-03-02T20:04:48-05:00">2017-03-02 20:04</time>
+</div>
+                <div class="stats">
+                                <a href="posts/992-accuracy-on-employee-resignations-under-construction/#disqus_thread" data-disqus-identifier="cache/posts/992-accuracy-on-employee-resignations-under-construction.html">Comments</a>
+
+
+                </div>
+            
+            </div>
+            <div class="body">
+                <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span>  <span class="n">neighbors</span><span class="p">,</span> <span class="n">svm</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegressionCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span><span class="p">,</span>\
+    <span class="n">AdaBoostClassifier</span>
+    
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span>\
+    <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">train_test_split</span><span class="p">,</span>\
+    <span class="n">learning_curve</span>
+
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="n">DIR_DATA</span> <span class="o">=</span> <span class="s2">"data"</span>
+<span class="n">DIR_PROCESSED</span> <span class="o">=</span> <span class="s2">"processed"</span>
+<span class="n">CV_FOLDS</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="HR_comma_sep.csv">HR_comma_sep.csv<a class="anchor-link" href="posts/992-accuracy-on-employee-resignations-under-construction/#HR_comma_sep.csv">¶</a>
+</h4>
+<h3 id="Features">Features<a class="anchor-link" href="posts/992-accuracy-on-employee-resignations-under-construction/#Features">¶</a>
+</h3>
+<ul>
+<li>Employee satisfaction level</li>
+<li>Last evaluation</li>
+<li>Number of projects</li>
+<li>Average monthly hours</li>
+<li>Time spent at the company</li>
+<li>Whether they have had a work accident</li>
+<li>Whether they have had a promotion in the last 5 years</li>
+<li>Department</li>
+<li>Salary</li>
+</ul>
+<h3 id="Target">Target<a class="anchor-link" href="posts/992-accuracy-on-employee-resignations-under-construction/#Target">¶</a>
+</h3>
+<ul>
+<li>Whether the employee has left</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">hr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DIR_DATA</span> <span class="o">+</span> <span class="s1">'/HR_comma_sep.csv'</span><span class="p">)</span>
+<span class="n">hr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[9]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>satisfaction_level</th>
+      <th>last_evaluation</th>
+      <th>number_project</th>
+      <th>average_montly_hours</th>
+      <th>time_spend_company</th>
+      <th>Work_accident</th>
+      <th>left</th>
+      <th>promotion_last_5years</th>
+      <th>sales</th>
+      <th>salary</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>0.38</td>
+      <td>0.53</td>
+      <td>2</td>
+      <td>157</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>0.80</td>
+      <td>0.86</td>
+      <td>5</td>
+      <td>262</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>0.11</td>
+      <td>0.88</td>
+      <td>7</td>
+      <td>272</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>medium</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>0.72</td>
+      <td>0.87</td>
+      <td>5</td>
+      <td>223</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>0.37</td>
+      <td>0.52</td>
+      <td>2</td>
+      <td>159</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>sales</td>
+      <td>low</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Percent who left: </span><span class="si">{:.2f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hr</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">hr</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Percent who left: 23.81
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Turn sales departments and salary (high/medium/low) into category types so that scikit-learn's algorithms can handle them</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">hr</span><span class="o">.</span><span class="n">sales</span> <span class="o">=</span> <span class="n">hr</span><span class="o">.</span><span class="n">sales</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="n">hr</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">hr</span><span class="o">.</span><span class="n">salary</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="n">hr</span><span class="p">[[</span><span class="s2">"sales"</span><span class="p">,</span><span class="s2">"salary"</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[12]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>sales</th>
+      <th>salary</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>7</td>
+      <td>1</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>7</td>
+      <td>2</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>7</td>
+      <td>2</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>7</td>
+      <td>1</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>7</td>
+      <td>1</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Create quick test of basic classification algorithms to see how well each performs with mostly unaltered data</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict_left</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'left'</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">left</span> 
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">)</span>
+    
+    
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    
+    <span class="n">train_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">test_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Training Score: </span><span class="si">{:.3f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Testing Score: </span><span class="si">%.3f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+    
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">classifiers</span> <span class="o">=</span> <span class="p">[</span><span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+               <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s1">'entropy'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+               <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(),</span>
+               <span class="n">LogisticRegressionCV</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> 
+               <span class="n">AdaBoostClassifier</span><span class="p">(),</span> 
+               <span class="n">GradientBoostingClassifier</span><span class="p">(),</span>
+               <span class="n">neighbors</span><span class="o">.</span><span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)]</span> 
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">clf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classifiers</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Classifier '</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="n">predict_left</span><span class="p">(</span><span class="n">hr</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Classifier  0
+Training Score: 0.998
+Testing Score: 0.988
+
+Classifier  1
+Training Score: 0.997
+Testing Score: 0.986
+
+Classifier  2
+Training Score: 0.962
+Testing Score: 0.949
+
+Classifier  3
+Training Score: 0.780
+Testing Score: 0.774
+
+Classifier  4
+Training Score: 0.962
+Testing Score: 0.964
+
+Classifier  5
+Training Score: 0.977
+Testing Score: 0.974
+
+Classifier  6
+Training Score: 0.951
+Testing Score: 0.927
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>They all seem to do well, besides svm, with Random Forest doing best regardless of it's criterion at ~98.7% predictive accuracy.</p>
+<p>Let's make sure they consistently produce that score using K-Fold Cross-Validation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="more"><a href="posts/992-accuracy-on-employee-resignations-under-construction/">Read more…</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+    
+                   <script>var disqus_shortname="ssven";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2017         <a href="mailto:svenningsensamuel@gmail.com">Samuel Svenningsen</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a></p>
+            
+        </footer>
+</div>
+    </section><script src="assets/js/all-nocdn.js" type="text/javascript"></script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+    </script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
 </body>
 </html>
