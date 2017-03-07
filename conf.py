@@ -589,11 +589,10 @@ REDIRECTIONS = []
 # named `default` will be executed.  You can use as many presets
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = ["git add .",
-                   "git commit -am 'Update'",
-                   "git push origin master",
-                   "git subtree split --prefix output -b dev",
-                   "git push -f origin dev:dev",
-                   "git branch -D dev"]
+                   "git commit -am 'Updating site'",
+                   "git pull"
+                   "git push",
+                   "ghp-import output/ -b master"]
 
 # github_deploy configuration
 # For more details, read the manual:
