@@ -592,7 +592,8 @@ DEPLOY_COMMANDS = ["git add .",
                    "git commit -am 'Updating site'",
                    "git pull",
                    "git push",
-                   "ghp-import output/ -b master"]
+                   "ghp-import output/ -b master",
+                   "git push origin master"]
 
 # github_deploy configuration
 # For more details, read the manual:
