@@ -590,7 +590,7 @@ REDIRECTIONS = []
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = ["git add .",
                    "git commit -am 'Updating site'",
-                   "git pull"
+                   "git pull",
                    "git push",
                    "ghp-import output/ -b master"]
 
