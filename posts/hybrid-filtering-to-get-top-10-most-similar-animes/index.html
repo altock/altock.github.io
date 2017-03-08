@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Hybrid Filtering to get Top 10 most similar Anime's | Sven's Portfolio</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://altock.github.io/posts/hybrid-filtering-to-get-top-10-most-similar-animes/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Samuel Svenningsen">
+<meta property="og:site_name" content="Sven's Portfolio">
+<meta property="og:title" content="Hybrid Filtering to get Top 10 most similar Anime's">
+<meta property="og:url" content="https://altock.github.io/posts/hybrid-filtering-to-get-top-10-most-similar-animes/">
+<meta property="og:description" content="Top 10 Similar Anime's using hybrid filtering¶Uses processed data (in dataframe anime) showing each anime's genre(s), type (show, movie, etc.), average rating, and the number of viewers who reviewed e">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-03-08T10:53:01-05:00">
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="../../index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="../../archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="../../categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="../../rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="https://github.com/altock" title="My Github"><i class="icon-github"></i></a></li>
+
+        </ul></section><section class="page-content"><div class="content" rel="main">
+    <div class="post">
+        <h1 class="p-name entry-title" itemprop="headline name">Hybrid Filtering to get Top 10 most similar Anime's</h1>
+
+        <div class="meta">
+            <div class="authordate">
+                <time class="timeago" datetime="2017-03-08T10:53:01-05:00">2017-03-08 10:53</time>
+            
+                      |  
+        <a href="index.ipynb" id="sourcelink">Source</a>
+
+            </div>
+            
+        </div>
+        <div class="body">
+            <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Top-10-Similar-Anime's-using-hybrid-filtering">Top 10 Similar Anime's using hybrid filtering<a class="anchor-link" href="#Top-10-Similar-Anime's-using-hybrid-filtering">¶</a>
+</h2>
+<p>Uses processed data (in dataframe <strong>anime</strong>) showing each anime's genre(s), type (show, movie, etc.), average rating, and the number of viewers who reviewed each anime. In addition, there is a dataframe (<strong>ratings</strong>) of individual viewers' ratings for each show.</p>
+<p>We will use this to create a system that will show the top 10 most similar anime's to any given anime.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">DIR_DATA</span> <span class="o">=</span> <span class="s2">"data"</span>
+<span class="n">DIR_PROCESSED</span> <span class="o">=</span> <span class="s2">"processed"</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The data in anime was preprocessed into it's current format and then stored in a pickle file. This process will be discussed in another post.</p>
+<p>Both dataframes have a "rating" column, so we are moving the rating field in <strong>anime</strong> into a new field called <em>avg_rating</em></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">DIR_PROCESSED</span> <span class="o">+</span> <span class="s1">'/one_hot_encoded_anime.pickle'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span>
+<span class="n">anime</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a_file</span><span class="p">)</span>
+<span class="n">a_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># "rating" is in both tables</span>
+<span class="n">anime</span><span class="p">[</span><span class="s2">"avg_rating"</span><span class="p">]</span> <span class="o">=</span> <span class="n">anime</span><span class="o">.</span><span class="n">rating</span>
+<span class="n">anime</span> <span class="o">=</span> <span class="n">anime</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"rating"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DIR_DATA</span> <span class="o">+</span> <span class="s1">'/rating.csv'</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">anime</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[3]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>anime_id</th>
+      <th>name</th>
+      <th>episodes</th>
+      <th>members</th>
+      <th>Movie</th>
+      <th>Music</th>
+      <th>ONA</th>
+      <th>OVA</th>
+      <th>Special</th>
+      <th>TV</th>
+      <th>...</th>
+      <th>Sports</th>
+      <th>Super Power</th>
+      <th>Supernatural</th>
+      <th>Thriller</th>
+      <th>Vampire</th>
+      <th>Yaoi</th>
+      <th>Yuri</th>
+      <th>nan</th>
+      <th>int_rating</th>
+      <th>avg_rating</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>5114</td>
+      <td>Fullmetal Alchemist: Brotherhood</td>
+      <td>64</td>
+      <td>793665</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.26</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>28977</td>
+      <td>Gintama°</td>
+      <td>51</td>
+      <td>114262</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.25</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>9253</td>
+      <td>Steins;Gate</td>
+      <td>24</td>
+      <td>673572</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.17</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>9969</td>
+      <td>Gintama&amp;#039;</td>
+      <td>51</td>
+      <td>151266</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.16</td>
+    </tr>
+</tbody>
+</table>
+<p>5 rows × 56 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ratings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[4]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>user_id</th>
+      <th>anime_id</th>
+      <th>rating</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>1</td>
+      <td>20</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>1</td>
+      <td>24</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>1</td>
+      <td>79</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>1</td>
+      <td>226</td>
+      <td>-1</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>1</td>
+      <td>241</td>
+      <td>-1</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we will merge the two dataframes into one <strong>shows</strong> dataframe.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shows</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">anime</span><span class="p">,</span> <span class="n">ratings</span><span class="p">)</span>
+<span class="n">shows</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[5]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>anime_id</th>
+      <th>name</th>
+      <th>episodes</th>
+      <th>members</th>
+      <th>Movie</th>
+      <th>Music</th>
+      <th>ONA</th>
+      <th>OVA</th>
+      <th>Special</th>
+      <th>TV</th>
+      <th>...</th>
+      <th>Supernatural</th>
+      <th>Thriller</th>
+      <th>Vampire</th>
+      <th>Yaoi</th>
+      <th>Yuri</th>
+      <th>nan</th>
+      <th>int_rating</th>
+      <th>avg_rating</th>
+      <th>user_id</th>
+      <th>rating</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>0</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+      <td>99</td>
+      <td>5</td>
+    </tr>
+<tr>
+<th>1</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+      <td>152</td>
+      <td>10</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+      <td>244</td>
+      <td>10</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+      <td>271</td>
+      <td>10</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>32281</td>
+      <td>Kimi no Na wa.</td>
+      <td>1</td>
+      <td>200630</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>9.37</td>
+      <td>278</td>
+      <td>-1</td>
+    </tr>
+</tbody>
+</table>
+<p>5 rows × 58 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For this example, we will find <strong><em>Dragon Ball Z</em></strong>'s top 10 most similar shows.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">showName</span> <span class="o">=</span> <span class="s2">"Dragon Ball Z"</span>
+
+<span class="n">shows</span><span class="p">[</span><span class="n">shows</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Dragon Ball Z"</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[6]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead><tr style="text-align: right;">
+<th></th>
+      <th>anime_id</th>
+      <th>name</th>
+      <th>episodes</th>
+      <th>members</th>
+      <th>Movie</th>
+      <th>Music</th>
+      <th>ONA</th>
+      <th>OVA</th>
+      <th>Special</th>
+      <th>TV</th>
+      <th>...</th>
+      <th>Supernatural</th>
+      <th>Thriller</th>
+      <th>Vampire</th>
+      <th>Yaoi</th>
+      <th>Yuri</th>
+      <th>nan</th>
+      <th>int_rating</th>
+      <th>avg_rating</th>
+      <th>user_id</th>
+      <th>rating</th>
+    </tr></thead>
+<tbody>
+<tr>
+<th>1259607</th>
+      <td>813</td>
+      <td>Dragon Ball Z</td>
+      <td>291</td>
+      <td>375662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8</td>
+      <td>8.32</td>
+      <td>3</td>
+      <td>10</td>
+    </tr>
+<tr>
+<th>1259608</th>
+      <td>813</td>
+      <td>Dragon Ball Z</td>
+      <td>291</td>
+      <td>375662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8</td>
+      <td>8.32</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+<tr>
+<th>1259609</th>
+      <td>813</td>
+      <td>Dragon Ball Z</td>
+      <td>291</td>
+      <td>375662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8</td>
+      <td>8.32</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+<tr>
+<th>1259610</th>
+      <td>813</td>
+      <td>Dragon Ball Z</td>
+      <td>291</td>
+      <td>375662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8</td>
+      <td>8.32</td>
+      <td>12</td>
+      <td>9</td>
+    </tr>
+<tr>
+<th>1259611</th>
+      <td>813</td>
+      <td>Dragon Ball Z</td>
+      <td>291</td>
+      <td>375662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8</td>
+      <td>8.32</td>
+      <td>21</td>
+      <td>8</td>
+    </tr>
+</tbody>
+</table>
+<p>5 rows × 58 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's make a pivot table where the value at element (<em>user_id</em>, <em>name</em>) is the rating the user with <em>user_id</em> gave to the show with that <em>name</em>, and NaN if no rating exists.</p>
+<p>In practice you could also use the <em>anime_id</em> instead of the <em>name</em> of the anime, but for readibility we went with <em>name</em> instead.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">animeRatings</span> <span class="o">=</span> <span class="n">shows</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">'user_id'</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s1">'name'</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">'rating'</span><span class="p">)</span>
+<span class="n">animeRatings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>name</th>
+      <th>&amp;quot;0&amp;quot;</th>
+      <th>&amp;quot;Aesop&amp;quot; no Ohanashi yori: Ushi to Kaeru, Yokubatta Inu</th>
+      <th>&amp;quot;Bungaku Shoujo&amp;quot; Kyou no Oyatsu: Hatsukoi</th>
+      <th>&amp;quot;Bungaku Shoujo&amp;quot; Memoire</th>
+      <th>&amp;quot;Bungaku Shoujo&amp;quot; Movie</th>
+      <th>&amp;quot;Eiji&amp;quot;</th>
+      <th>.hack//G.U. Returner</th>
+      <th>.hack//G.U. Trilogy</th>
+      <th>.hack//G.U. Trilogy: Parody Mode</th>
+      <th>.hack//Gift</th>
+      <th>...</th>
+      <th>makemagic</th>
+      <th>on-chan, Yume Power Daibouken!</th>
+      <th>s.CRY.ed</th>
+      <th>vivi</th>
+      <th>xxxHOLiC</th>
+      <th>xxxHOLiC Kei</th>
+      <th>xxxHOLiC Movie: Manatsu no Yoru no Yume</th>
+      <th>xxxHOLiC Rou</th>
+      <th>xxxHOLiC Shunmuki</th>
+      <th>◯</th>
+    </tr>
+<tr>
+<th>user_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+<tr>
+<th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+<tr>
+<th>3</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+<tr>
+<th>4</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+<tr>
+<th>5</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+</tbody>
+</table>
+<p>5 rows × 11193 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's look at the ratings that <strong><em>Dragon Ball Z</em></strong> got from users.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">showRatings</span> <span class="o">=</span> <span class="n">animeRatings</span><span class="p">[</span><span class="n">showName</span><span class="p">]</span>
+<span class="n">showRatings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[9]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>user_id
+1     NaN
+2     NaN
+3    10.0
+4     NaN
+5     5.0
+Name: Dragon Ball Z, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><!-- TEASER_END --></p>
+<h3 id="Colaboritive-Filtering">Colaboritive Filtering<a class="anchor-link" href="#Colaboritive-Filtering">¶</a>
+</h3>
+<p>Now let's see what shows ratings correlate with <strong><em>Dragon Ball Z</em></strong>, i.e. if user <em>x</em> gave both DBZ and FullMetal the same score, than they are similar (1.0 in similarity), if he gave them very different scores, then they aren't similar (closet to 0 similarity)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">similarAnimes</span> <span class="o">=</span> <span class="n">animeRatings</span><span class="o">.</span><span class="n">corrwith</span><span class="p">(</span><span class="n">showRatings</span><span class="p">)</span>
+<span class="n">similarAnimes</span> <span class="o">=</span> <span class="n">similarAnimes</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">similarAnimes</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/altock/anaconda3/envs/py35/lib/python3.5/site-packages/numpy/lib/function_base.py:2995: RuntimeWarning: Degrees of freedom &lt;= 0 for slice
+  c = cov(x, y, rowvar)
+/home/altock/anaconda3/envs/py35/lib/python3.5/site-packages/numpy/lib/function_base.py:2929: RuntimeWarning: divide by zero encountered in double_scalars
+  c *= 1. / np.float64(fact)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[13]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+      <th>0</th>
+    </tr>
+<tr>
+<th>name</th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>&amp;quot;0&amp;quot;</th>
+      <td>0.663817</td>
+    </tr>
+<tr>
+<th>&amp;quot;Aesop&amp;quot; no Ohanashi yori: Ushi to Kaeru, Yokubatta Inu</th>
+      <td>1.000000</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Kyou no Oyatsu: Hatsukoi</th>
+      <td>0.438522</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Memoire</th>
+      <td>0.430201</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Movie</th>
+      <td>0.542192</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's see those similarity scores in order, highest to lowest.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">similarAnimes</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/altock/anaconda3/envs/py35/lib/python3.5/site-packages/ipykernel/__main__.py:1: FutureWarning: order is deprecated, use sort_values(...)
+  if __name__ == '__main__':
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[14]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name
+Tamagotchi! Miracle Friends                                     1.000000
+3-tsu no Hanashi                                                1.000000
+Ojiichan ga Kaizoku Datta Koro                                  1.000000
+Itazura Tenshi Chippo-chan                                      1.000000
+Itoshi no Betty Mamonogatari                                    1.000000
+Oishinbo: Nichibei Kome Sensou                                  1.000000
+Oishinbo                                                        1.000000
+Jam                                                             1.000000
+Jankenman                                                       1.000000
+Okashina Hotel                                                  1.000000
+Jarinko Chie (TV)                                               1.000000
+Obocchama-kun                                                   1.000000
+Wan Wan Chuushingura                                            1.000000
+Wan Wan Celepoo Soreyuke! Tetsunoshin                           1.000000
+Wakusei Robo Danguard Ace tai Konchuu Robot Gundan              1.000000
+Nyuru Nyuru!! Kakusen-kun                                       1.000000
+Bit the Cupid                                                   1.000000
+Inyouchuu Etsu Special                                          1.000000
+Oosouji                                                         1.000000
+Ikuze! Gen-san                                                  1.000000
+Onna Kyoushi: Nikutai Jugyou                                    1.000000
+Omoide no Album                                                 1.000000
+Ichigatsu ni wa Christmas                                       1.000000
+Ichigo Ichie: Koibana Tomobana                                  1.000000
+Omakase! Miracle Cat-dan                                        1.000000
+Omakase Scrappers                                               1.000000
+Ima, Futari no Michi                                            1.000000
+Instant History                                                 1.000000
+Okon Joururi                                                    1.000000
+Waza no Tabibito                                                1.000000
+                                                                  ...   
+KochinPa!                                                      -0.940634
+Great Rabbit                                                   -0.944911
+Kindaichi Shounen no Jikenbo: Kuromajutsu Satsujin Jiken-hen   -0.981981
+Oppai ga Ippai                                                 -1.000000
+Princess Princess Specials                                     -1.000000
+Duan Nao                                                       -1.000000
+DušaN                                                          -1.000000
+Stitch!: Zutto Saikou no Tomodachi Special                     -1.000000
+Recorder                                                       -1.000000
+MONSTER GENERATiON                                             -1.000000
+PriPara Movie: Mi~nna no Akogare♪ Let&amp;#039;s Go☆Prix Paris     -1.000000
+Hikenai Guitar wo Hikundaze                                    -1.000000
+Nemure Omoi Ko, Sora no Shitone ni                             -1.000000
+Columbos                                                       -1.000000
+Shi Xiong                                                      -1.000000
+Beluga                                                         -1.000000
+Undouki Kenshin Manual Taiou Taisou                            -1.000000
+Hot Minute: Gudetama                                           -1.000000
+Maze                                                           -1.000000
+Haru no Shikumi                                                -1.000000
+Nouryou Anime: Denkyuu Ika Matsuri                             -1.000000
+Koro-sensei Q!                                                 -1.000000
+Hand Soap                                                      -1.000000
+Kamakura                                                       -1.000000
+Mochibei                                                       -1.000000
+Monkey King: Hero Is Back                                      -1.000000
+Futon                                                          -1.000000
+TV-ban Pokemon Special Masara Town-hen Soushuuhen              -1.000000
+Present Made no Michinori                                      -1.000000
+PiKA PiKA                                                      -1.000000
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It seems like a lot of users gave the same score to other anime's that they gave to <strong><em>DBZ</em></strong>, which makes sense since the ratings are just Int's between 1 and 10 inclusive.</p>
+<p>So let's see if we can aggregate these similarities over all users (currently this is per user per show paired with <strong><em>DBZ</em></strong>), in addition to seeing how many users contributed to this score</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">animeStats</span> <span class="o">=</span> <span class="n">shows</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">'rating'</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">]})</span>
+<span class="n">animeStats</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[17]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr>
+<th></th>
+      <th colspan="2" halign="left">rating</th>
+    </tr>
+<tr>
+<th></th>
+      <th>size</th>
+      <th>mean</th>
+    </tr>
+<tr>
+<th>name</th>
+      <th></th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>&amp;quot;0&amp;quot;</th>
+      <td>26</td>
+      <td>2.769231</td>
+    </tr>
+<tr>
+<th>&amp;quot;Aesop&amp;quot; no Ohanashi yori: Ushi to Kaeru, Yokubatta Inu</th>
+      <td>2</td>
+      <td>0.000000</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Kyou no Oyatsu: Hatsukoi</th>
+      <td>782</td>
+      <td>5.774936</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Memoire</th>
+      <td>809</td>
+      <td>6.155748</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Movie</th>
+      <td>1535</td>
+      <td>6.457980</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hmm. It seems like we may end up in a case where a show with a handful of reviewers can seem very similar to <strong><em>DBZ</em></strong> if that same handful of people also watched and liked <strong><em>DBZ</em></strong>.</p>
+<p>To avoid this we're going to filter out any show with less than a hundred reviews. This number (100) is picked as an arbitrary signifier of a show with enough reviews that we can draw meaningful conclusions from it.</p>
+<p>Printed below is the top 10 shows by average rating with mroe than 100 reviews. These are popular, well-known anime's, several of which I've watched and love (<em>Full Metal Alchemist</em> and <em>Code Geass</em>)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">popularAnimes</span> <span class="o">=</span> <span class="n">animeStats</span><span class="p">[</span><span class="s1">'rating'</span><span class="p">][</span><span class="s1">'size'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">100</span>
+<span class="n">animeStats</span><span class="p">[</span><span class="n">popularAnimes</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([(</span><span class="s1">'rating'</span><span class="p">,</span><span class="s1">'mean'</span><span class="p">)],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[18]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr>
+<th></th>
+      <th colspan="2" halign="left">rating</th>
+    </tr>
+<tr>
+<th></th>
+      <th>size</th>
+      <th>mean</th>
+    </tr>
+<tr>
+<th>name</th>
+      <th></th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>Kimi no Na wa.</th>
+      <td>2199</td>
+      <td>8.297863</td>
+    </tr>
+<tr>
+<th>Ginga Eiyuu Densetsu</th>
+      <td>903</td>
+      <td>8.239203</td>
+    </tr>
+<tr>
+<th>Steins;Gate</th>
+      <td>19283</td>
+      <td>8.126796</td>
+    </tr>
+<tr>
+<th>Fullmetal Alchemist: Brotherhood</th>
+      <td>24574</td>
+      <td>8.028933</td>
+    </tr>
+<tr>
+<th>Gintama°</th>
+      <td>1386</td>
+      <td>7.956710</td>
+    </tr>
+<tr>
+<th>Hunter x Hunter (2011)</th>
+      <td>8575</td>
+      <td>7.924082</td>
+    </tr>
+<tr>
+<th>Clannad: After Story</th>
+      <td>17854</td>
+      <td>7.835275</td>
+    </tr>
+<tr>
+<th>Monster</th>
+      <td>4594</td>
+      <td>7.809099</td>
+    </tr>
+<tr>
+<th>Gintama</th>
+      <td>4974</td>
+      <td>7.775231</td>
+    </tr>
+<tr>
+<th>Code Geass: Hangyaku no Lelouch R2</th>
+      <td>24242</td>
+      <td>7.765943</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we join this table of average ratings with our previous table of similarities to <strong><em>DBZ</em></strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">animeStats</span><span class="p">[</span><span class="n">popularAnimes</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">similarAnimes</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'similarity'</span><span class="p">]))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/altock/anaconda3/envs/py35/lib/python3.5/site-packages/pandas/tools/merge.py:536: UserWarning: merging between different levels can give an unintended result (2 levels on the left, 1 on the right)
+  warnings.warn(msg, UserWarning)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[26]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+      <th>(rating, size)</th>
+      <th>(rating, mean)</th>
+      <th>similarity</th>
+    </tr>
+<tr>
+<th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Kyou no Oyatsu: Hatsukoi</th>
+      <td>782</td>
+      <td>5.774936</td>
+      <td>0.438522</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Memoire</th>
+      <td>809</td>
+      <td>6.155748</td>
+      <td>0.430201</td>
+    </tr>
+<tr>
+<th>&amp;quot;Bungaku Shoujo&amp;quot; Movie</th>
+      <td>1535</td>
+      <td>6.457980</td>
+      <td>0.542192</td>
+    </tr>
+<tr>
+<th>.hack//G.U. Returner</th>
+      <td>730</td>
+      <td>4.804110</td>
+      <td>0.673044</td>
+    </tr>
+<tr>
+<th>.hack//G.U. Trilogy</th>
+      <td>1118</td>
+      <td>5.347943</td>
+      <td>0.648628</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's see the top 10 most similar movies to <strong><em>DBZ</em></strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'similarity'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[20]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+      <th>(rating, size)</th>
+      <th>(rating, mean)</th>
+      <th>similarity</th>
+    </tr>
+<tr>
+<th>name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+<th>Dragon Ball Z</th>
+      <td>17032</td>
+      <td>6.772135</td>
+      <td>1.000000</td>
+    </tr>
+<tr>
+<th>Soratobu Yuureisen</th>
+      <td>163</td>
+      <td>5.380368</td>
+      <td>0.947088</td>
+    </tr>
+<tr>
+<th>Omae Umasou da na</th>
+      <td>171</td>
+      <td>6.824561</td>
+      <td>0.918776</td>
+    </tr>
+<tr>
+<th>Ginga Tetsudou Monogatari</th>
+      <td>144</td>
+      <td>5.638889</td>
+      <td>0.887691</td>
+    </tr>
+<tr>
+<th>Galaxy Angel 3 Specials</th>
+      <td>117</td>
+      <td>4.965812</td>
+      <td>0.865963</td>
+    </tr>
+<tr>
+<th>Dragon Ball</th>
+      <td>14117</td>
+      <td>6.597152</td>
+      <td>0.863344</td>
+    </tr>
+<tr>
+<th>Aquarion Movie: Ippatsu Gyakuten-hen</th>
+      <td>141</td>
+      <td>5.404255</td>
+      <td>0.861022</td>
+    </tr>
+<tr>
+<th>Sol Bianca</th>
+      <td>109</td>
+      <td>4.568807</td>
+      <td>0.856030</td>
+    </tr>
+<tr>
+<th>Ojamajo Doremi Na-i-sho</th>
+      <td>135</td>
+      <td>5.251852</td>
+      <td>0.854087</td>
+    </tr>
+<tr>
+<th>Youma</th>
+      <td>186</td>
+      <td>4.806452</td>
+      <td>0.852663</td>
+    </tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Unsurprisingly, the most similar show to <strong><em>Dragon Ball Z</em></strong> is <strong><em>Dragon Ball Z</em></strong> itself, which in real life we would add a step to remove this obvious, but useless, recommendation.</p>
+<p><strong><em>Dragon Ball</em></strong> is where it should be in the list (on it, but not at the top) given it's slightly different genre. It's more fantasy/<em>Journey to the West</em> style than <strong><em>DBZ</em></strong>'s more superman-y sci-fi plots with aliens and androids.</p>
+
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+        </div>
+                <ul class="pager hidden-print">
+<li class="previous">
+                <a href="../992-accuracy-on-employee-resignations-under-construction/" rel="prev" title="99.2% Accuracy on Employee Resignations (Under Construction)">Previous post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="ssven",
+            disqus_url="https://altock.github.io/posts/hybrid-filtering-to-get-top-10-most-similar-animes/",
+        disqus_title="Hybrid Filtering to get Top 10 most similar Anime's",
+        disqus_identifier="cache/posts/hybrid-filtering-to-get-top-10-most-similar-animes.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+    </div>
+                     <footer id="footer"><p>Contents © 2017         <a href="mailto:svenningsensamuel@gmail.com">Samuel Svenningsen</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a></p>
+            
+        </footer>
+</div>
+    </section><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-79040842-3', 'auto');
+  ga('send', 'pageview');
+
+</script><script src="../../assets/js/all-nocdn.js" type="text/javascript"></script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+    </script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>
