@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Sven's Portfolio</title><link>https://altock.github.io/</link><description>This is a portfolio site for Samuel "Sven" Svenningsen</description><atom:link type="application/rss+xml" rel="self" href="https://altock.github.io/rss.xml"></atom:link><language>en</language><lastBuildDate>Wed, 08 Mar 2017 16:07:31 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>99.2% Accuracy on Employee Resignations (Under Construction)</title><link>https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/</link><dc:creator>Samuel Svenningsen</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sven's Portfolio</title><link>https://altock.github.io/</link><description>This is a portfolio site for Samuel "Sven" Svenningsen</description><atom:link type="application/rss+xml" href="https://altock.github.io/rss.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 13 Mar 2017 19:13:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>99.2% Accuracy on Employee Resignations</title><link>https://altock.github.io/posts/992-accuracy-on-employee-resignations/</link><dc:creator>Samuel Svenningsen</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
     &lt;div class="container" id="notebook-container"&gt;
 
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
@@ -7,7 +7,8 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h2 id="Classifying-whether-or-not-employees-are-likely-to-resign"&gt;Classifying whether or not employees are likely to resign&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/#Classifying-whether-or-not-employees-are-likely-to-resign"&gt;¶&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id="Classifying-whether-or-not-employees-are-likely-to-resign"&gt;Classifying whether or not employees are likely to resign&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations/#Classifying-whether-or-not-employees-are-likely-to-resign"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;First import all the libraries we are going to use&lt;/p&gt;
+
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -26,6 +27,7 @@
     &lt;span class="n"&gt;AdaBoostClassifier&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.naive_bayes&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MultinomialNB&lt;/span&gt; 
 
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;preprocessing&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.metrics&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;accuracy_score&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mean_squared_error&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;r2_score&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;\
     &lt;span class="n"&gt;mean_absolute_error&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;confusion_matrix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;classification_report&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sklearn.model_selection&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cross_val_score&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;train_test_split&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;\
@@ -54,7 +56,8 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h4 id="HR_comma_sep.csv"&gt;HR_comma_sep.csv&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/#HR_comma_sep.csv"&gt;¶&lt;/a&gt;&lt;/h4&gt;&lt;h3 id="Features"&gt;Features&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/#Features"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;ul&gt;
+&lt;h4 id="HR_comma_sep.csv"&gt;HR_comma_sep.csv&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations/#HR_comma_sep.csv"&gt;¶&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;All our data is stored in this file, here's a slightly altered description of the features provided with the competition.&lt;/p&gt;
+&lt;h3 id="Features"&gt;Features&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations/#Features"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;Employee satisfaction level&lt;/li&gt;
 &lt;li&gt;Last evaluation&lt;/li&gt;
 &lt;li&gt;Number of projects&lt;/li&gt;
@@ -65,9 +68,10 @@
 &lt;li&gt;Department&lt;/li&gt;
 &lt;li&gt;Salary&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="Target"&gt;Target&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/#Target"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;ul&gt;
+&lt;h3 id="Target"&gt;Target&lt;a class="anchor-link" href="https://altock.github.io/posts/992-accuracy-on-employee-resignations/#Target"&gt;¶&lt;/a&gt;&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;Whether the employee has left&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;Now let's load and look at the actual data&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
@@ -193,6 +197,142 @@
 &lt;div class="prompt input_prompt"&gt;In [3]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
     &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+&lt;div class="prompt output_prompt"&gt;Out[3]:&lt;/div&gt;
+
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;satisfaction_level&lt;/th&gt;
+      &lt;th&gt;last_evaluation&lt;/th&gt;
+      &lt;th&gt;number_project&lt;/th&gt;
+      &lt;th&gt;average_montly_hours&lt;/th&gt;
+      &lt;th&gt;time_spend_company&lt;/th&gt;
+      &lt;th&gt;Work_accident&lt;/th&gt;
+      &lt;th&gt;left&lt;/th&gt;
+      &lt;th&gt;promotion_last_5years&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;count&lt;/th&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+      &lt;td&gt;14999.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;mean&lt;/th&gt;
+      &lt;td&gt;0.612834&lt;/td&gt;
+      &lt;td&gt;0.716102&lt;/td&gt;
+      &lt;td&gt;3.803054&lt;/td&gt;
+      &lt;td&gt;201.050337&lt;/td&gt;
+      &lt;td&gt;3.498233&lt;/td&gt;
+      &lt;td&gt;0.144610&lt;/td&gt;
+      &lt;td&gt;0.238083&lt;/td&gt;
+      &lt;td&gt;0.021268&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;std&lt;/th&gt;
+      &lt;td&gt;0.248631&lt;/td&gt;
+      &lt;td&gt;0.171169&lt;/td&gt;
+      &lt;td&gt;1.232592&lt;/td&gt;
+      &lt;td&gt;49.943099&lt;/td&gt;
+      &lt;td&gt;1.460136&lt;/td&gt;
+      &lt;td&gt;0.351719&lt;/td&gt;
+      &lt;td&gt;0.425924&lt;/td&gt;
+      &lt;td&gt;0.144281&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;td&gt;0.090000&lt;/td&gt;
+      &lt;td&gt;0.360000&lt;/td&gt;
+      &lt;td&gt;2.000000&lt;/td&gt;
+      &lt;td&gt;96.000000&lt;/td&gt;
+      &lt;td&gt;2.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;25%&lt;/th&gt;
+      &lt;td&gt;0.440000&lt;/td&gt;
+      &lt;td&gt;0.560000&lt;/td&gt;
+      &lt;td&gt;3.000000&lt;/td&gt;
+      &lt;td&gt;156.000000&lt;/td&gt;
+      &lt;td&gt;3.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;50%&lt;/th&gt;
+      &lt;td&gt;0.640000&lt;/td&gt;
+      &lt;td&gt;0.720000&lt;/td&gt;
+      &lt;td&gt;4.000000&lt;/td&gt;
+      &lt;td&gt;200.000000&lt;/td&gt;
+      &lt;td&gt;3.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;75%&lt;/th&gt;
+      &lt;td&gt;0.820000&lt;/td&gt;
+      &lt;td&gt;0.870000&lt;/td&gt;
+      &lt;td&gt;5.000000&lt;/td&gt;
+      &lt;td&gt;245.000000&lt;/td&gt;
+      &lt;td&gt;4.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;7.000000&lt;/td&gt;
+      &lt;td&gt;310.000000&lt;/td&gt;
+      &lt;td&gt;10.000000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In [4]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'Percent who left: &lt;/span&gt;&lt;span class="si"&gt;{:.2f}&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;left&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -222,14 +362,14 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Turn sales departments and salary (high/medium/low) into category types so that scikit-learn's algorithms can handle them&lt;/p&gt;
+&lt;p&gt;First, let's turn sales departments and salary (high/medium/low) into category types so that scikit-learn's algorithms can handle them&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
-&lt;div class="prompt input_prompt"&gt;In [4]:&lt;/div&gt;
+&lt;div class="prompt input_prompt"&gt;In [5]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
     &lt;div class="input_area"&gt;
 &lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sales&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sales&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;astype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'category'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cat&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;codes&lt;/span&gt;
@@ -246,7 +386,7 @@
 
 
 &lt;div class="output_area"&gt;
-&lt;div class="prompt output_prompt"&gt;Out[4]:&lt;/div&gt;
+&lt;div class="prompt output_prompt"&gt;Out[5]:&lt;/div&gt;
 
 
 &lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
@@ -301,7 +441,7 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;a href="https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/"&gt;Read more…&lt;/a&gt; (11 min remaining to read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://altock.github.io/posts/992-accuracy-on-employee-resignations-under-construction/</guid><pubDate>Wed, 08 Mar 2017 01:58:31 GMT</pubDate></item><item><title>Missed Medical Appointments Exploration (Under Construction)</title><link>https://altock.github.io/posts/missed-medical-appointments-exploration-under-construction/</link><dc:creator>Samuel Svenningsen</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
+&lt;p&gt;&lt;a href="https://altock.github.io/posts/992-accuracy-on-employee-resignations/"&gt;Read more…&lt;/a&gt; (11 min remaining to read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://altock.github.io/posts/992-accuracy-on-employee-resignations/</guid><pubDate>Wed, 08 Mar 2017 01:58:31 GMT</pubDate></item><item><title>Missed Medical Appointments Exploration (Under Construction)</title><link>https://altock.github.io/posts/missed-medical-appointments-exploration-under-construction/</link><dc:creator>Samuel Svenningsen</dc:creator><description>&lt;div tabindex="-1" id="notebook" class="border-box-sizing"&gt;
     &lt;div class="container" id="notebook-container"&gt;
 
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
